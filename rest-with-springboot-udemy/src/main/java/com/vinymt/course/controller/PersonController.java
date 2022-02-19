@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vinymt.course.model.Person;
+import com.vinymt.course.data.vo.PersonVO;
 import com.vinymt.course.services.PersonService;
 
 @RestController
@@ -24,22 +24,22 @@ public class PersonController {
 	private PersonService service;
 	
 	@GetMapping(value="/{id}")
-	public Person findById(@PathVariable("id") Long id) throws Exception {
+	public PersonVO findById(@PathVariable("id") Long id) throws Exception {
 		return service.findById(id);
 	}
 	
 	@GetMapping
-	public List<Person> findAll() throws Exception {
+	public List<PersonVO> findAll() throws Exception {
 		return service.findAll();
 	}
 	
 	@PostMapping
-	public Person create(@RequestBody Person person) throws Exception {
+	public PersonVO create(@RequestBody PersonVO person) throws Exception {
 		return service.create(person);
 	}
 	
 	@PutMapping
-	public Person update(@RequestBody Person person) throws Exception {
+	public PersonVO update(@RequestBody PersonVO person) throws Exception {
 		return service.update(person);
 	}
 	

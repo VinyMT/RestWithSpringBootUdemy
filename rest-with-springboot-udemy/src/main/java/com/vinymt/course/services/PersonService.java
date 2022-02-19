@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.vinymt.course.converter.DozerConverter;
+import com.vinymt.course.data.model.Person;
+import com.vinymt.course.data.vo.PersonVO;
 import com.vinymt.course.exception.ResourceNotFoundException;
-import com.vinymt.course.model.Person;
 import com.vinymt.course.repository.PersonRepository;
 
 @Service
@@ -15,28 +17,31 @@ public class PersonService {
 	@Autowired
 	PersonRepository repo;
 	
-	public Person findById(Long id) {
-		return repo.findById(id).orElseThrow(
+	public PersonVO findById(Long id) {
+		var entity = repo.findById(id).orElseThrow(
 				() -> new ResourceNotFoundException("No records found for this id!"));
+		return DozerConverter.parseObject(entity, PersonVO.class);
 	}
 	
-	public List<Person> findAll() {
-		return repo.findAll();
+	public List<PersonVO> findAll() {
+		return DozerConverter.parseListObjects(repo.findAll(), PersonVO.class);
 	}
 	
-	public Person create(Person person) {
-		return repo.save(person);
+	public PersonVO create(PersonVO person) {
+		var entity = DozerConverter.parseObject(person, Person.class);
+		var vo = DozerConverter.parseObject(repo.save(entity), PersonVO.class);
+		return vo;
 	}
 	
-	public Person update(Person person) {
-		Person entity = repo.findById(person.getId()).orElseThrow(
+	public PersonVO update(PersonVO person) {
+		var entity = repo.findById(person.getId()).orElseThrow(
 				() -> new ResourceNotFoundException("No records found for this id!"));
 		entity.setFirstName(person.getFirstName());
 		entity.setLastName(person.getLastName());
 		entity.setAddress(person.getAddress());
 		entity.setGender(person.getGender());
-		repo.save(entity);
-		return entity;
+		var vo = DozerConverter.parseObject(repo.save(entity), PersonVO.class);
+		return vo;
 	}
 	
 	public void delete(Long id) {
