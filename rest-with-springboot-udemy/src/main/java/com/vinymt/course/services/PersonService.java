@@ -1,62 +1,47 @@
 package com.vinymt.course.services;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.vinymt.course.exception.ResourceNotFoundException;
 import com.vinymt.course.model.Person;
+import com.vinymt.course.repository.PersonRepository;
 
 @Service
 public class PersonService {
 	
-	private final AtomicLong counter = new AtomicLong();
+	@Autowired
+	PersonRepository repo;
 	
-	public Person findById(String id) {
-		Person person = new Person();
-		
-		person.setId(counter.incrementAndGet());
-		person.setFirstName("Vinícius");
-		person.setLastName("Matiola Tramontin");
-		person.setAddress("Blumenau - Santa Catarina - Brasil");
-		person.setGender("Male");
-		
-		return person;
+	public Person findById(Long id) {
+		return repo.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException("No records found for this id!"));
 	}
 	
 	public List<Person> findAll() {
-		List<Person> persons = new ArrayList<>();
-		
-		for(int i = 0; i < 8; i++) {
-			Person person = mockPerson(i);
-			persons.add(person);
-		}
-		
-		return persons;
-	}
-
-	private Person mockPerson(int i) {
-		Person person = new Person();
-		
-		person.setId(counter.incrementAndGet());
-		person.setFirstName("Person name" + i);
-		person.setLastName("Last name" + i);
-		person.setAddress("Somewhere - Brazil" + i);
-		person.setGender("Male" + i);
-		
-		return person;
+		return repo.findAll();
 	}
 	
 	public Person create(Person person) {
-		return person;
+		return repo.save(person);
 	}
 	
 	public Person update(Person person) {
-		return person;
+		Person entity = repo.findById(person.getId()).orElseThrow(
+				() -> new ResourceNotFoundException("No records found for this id!"));
+		entity.setFirstName(person.getFirstName());
+		entity.setLastName(person.getLastName());
+		entity.setAddress(person.getAddress());
+		entity.setGender(person.getGender());
+		repo.save(entity);
+		return entity;
 	}
 	
-	public void delete(String id) {
-		
+	public void delete(Long id) {
+		Person entity = repo.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException("No records found for this id!"));
+		repo.delete(entity);
 	}
 }
