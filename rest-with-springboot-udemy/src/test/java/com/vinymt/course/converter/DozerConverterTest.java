@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.vinymt.course.converter.mocks.MockPerson;
 import com.vinymt.course.data.model.Person;
-import com.vinymt.course.data.vo.PersonVO;
+import com.vinymt.course.data.vo.v1.PersonVO;
 
 @SpringBootTest
 public class DozerConverterTest {

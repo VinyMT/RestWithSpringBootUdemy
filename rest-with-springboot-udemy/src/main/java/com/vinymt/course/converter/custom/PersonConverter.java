@@ -5,7 +5,7 @@ import java.util.Date;
 import org.springframework.stereotype.Service;
 
 import com.vinymt.course.data.model.Person;
-import com.vinymt.course.data.vo.v2.PersonVOV2;
+import com.vinymt.course.data.vo.v1.PersonVOV2;
 
 @Service
 public class PersonConverter {

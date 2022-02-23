@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vinymt.course.data.vo.PersonVO;
-import com.vinymt.course.data.vo.v2.PersonVOV2;
+import com.vinymt.course.data.vo.v1.PersonVO;
 import com.vinymt.course.services.PersonService;
 
 @RestController
-@RequestMapping("/person")
+@RequestMapping("/api/person/v1")
 public class PersonController {
 	
 	@Autowired
@@ -34,14 +33,9 @@ public class PersonController {
 		return service.findAll();
 	}
 	
-	@PostMapping("/v1")
+	@PostMapping
 	public PersonVO createv1(@RequestBody PersonVO person) throws Exception {
 		return service.createv1(person);
-	}
-	
-	@PostMapping("/v2")
-	public PersonVOV2 createv2(@RequestBody PersonVOV2 person) throws Exception {
-		return service.createv2(person);
 	}
 	
 	@PutMapping

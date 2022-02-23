@@ -1,10 +1,12 @@
-package com.vinymt.course.data.vo.v2;
+package com.vinymt.course.data.vo.v1;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Objects;
 
-public class PersonVOV2 implements Serializable {
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({"id", "address", "firstName", "lastName", "gender"})
+public class PersonVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -14,9 +16,8 @@ public class PersonVOV2 implements Serializable {
 	private String lastName;
 	private String address;
 	private String gender;
-	private Date birthday;
 	
-	public PersonVOV2() {
+	public PersonVO() {
 		
 	}
 
@@ -59,18 +60,10 @@ public class PersonVOV2 implements Serializable {
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-	
-	public Date getBirthday() {
-		return birthday;
-	}
-
-	public void setBirthday(Date birthday) {
-		this.birthday = birthday;
-	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(address, birthday, firstName, gender, id, lastName);
+		return Objects.hash(address, firstName, gender, id, lastName);
 	}
 
 	@Override
@@ -81,11 +74,13 @@ public class PersonVOV2 implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		PersonVOV2 other = (PersonVOV2) obj;
-		return Objects.equals(address, other.address) && Objects.equals(birthday, other.birthday)
-				&& Objects.equals(firstName, other.firstName) && Objects.equals(gender, other.gender)
-				&& Objects.equals(id, other.id) && Objects.equals(lastName, other.lastName);
+		PersonVO other = (PersonVO) obj;
+		return Objects.equals(address, other.address) && Objects.equals(firstName, other.firstName)
+				&& Objects.equals(gender, other.gender) && Objects.equals(id, other.id)
+				&& Objects.equals(lastName, other.lastName);
 	}
 	
 	
+	
 }
+	
