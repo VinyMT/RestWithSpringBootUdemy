@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.vinymt.course.data.model.Person;
-import com.vinymt.course.data.vo.PersonVO;
+import com.vinymt.course.data.vo.v1.PersonVO;
 
 @SpringBootTest
 public class MockPerson {
