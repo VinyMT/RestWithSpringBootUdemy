@@ -3,9 +3,7 @@ package com.vinymt.course.data.vo.v1;
 import java.io.Serializable;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonPropertyOrder({"id", "address", "firstName", "lastName", "gender"})
 public class PersonVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
