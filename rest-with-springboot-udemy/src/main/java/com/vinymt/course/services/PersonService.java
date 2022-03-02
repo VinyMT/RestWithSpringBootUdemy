@@ -17,10 +17,10 @@ import com.vinymt.course.repository.PersonRepository;
 public class PersonService {
 	
 	@Autowired
-	PersonRepository repo;
+	private PersonRepository repo;
 	
 	@Autowired
-	PersonConverter converter;
+	private PersonConverter converter;
 	
 	public PersonVO findById(Long id) {
 		var entity = repo.findById(id).orElseThrow(

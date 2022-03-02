@@ -1,42 +1,23 @@
-package com.vinymt.course.data.model;
+package com.vinymt.course.data.vo.v1;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.hateoas.RepresentationModel;
 
-@Entity
-@Table(name="books")
-public class Book implements Serializable {
+public class BookVO extends RepresentationModel<BookVO> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+
 	private Long id;
 	private String author;
-	@Column(name="launch_date")
 	private Date launchDate;
 	private double price;
 	private String title;
 	
-	public Book() {
-
-	}
-	
-	public Book(Long id, String author, Date launchDate, double price, String title) {
-		super();
-		this.id = id;
-		this.author = author;
-		this.launchDate = launchDate;
-		this.price = price;
-		this.title = title;
+	public BookVO() {
+		
 	}
 	
 	public Long getId() {
@@ -92,13 +73,10 @@ public class Book implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Book other = (Book) obj;
+		BookVO other = (BookVO) obj;
 		return Objects.equals(author, other.author) && Objects.equals(id, other.id)
 				&& Objects.equals(launchDate, other.launchDate)
 				&& Double.doubleToLongBits(price) == Double.doubleToLongBits(other.price)
 				&& Objects.equals(title, other.title);
 	}
-	
-	
-	
 }
