@@ -1,5 +1,6 @@
 package com.vinymt.course.controller;
 
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,24 +26,36 @@ public class PersonController {
 	
 	@GetMapping(value = "/{id}", produces = {"application/json", "application/xml", "application/x-yaml"})
 	public PersonVO findById(@PathVariable("id") Long id) throws Exception {
-		return service.findById(id);
+		PersonVO vo = service.findById(id);
+		vo.add(WebMvcLinkBuilder.linkTo(PersonController.class).slash(id).withSelfRel());
+		return vo;
 	}
 	
 	@GetMapping(produces = {"application/json", "application/xml", "application/x-yaml"})
 	public List<PersonVO> findAll() throws Exception {
-		return service.findAll();
+		List<PersonVO> listVo = service.findAll();
+		
+		for(PersonVO vo : listVo) {
+			vo.add(WebMvcLinkBuilder.linkTo(PersonController.class).slash(vo.getId()).withSelfRel());
+		}
+		
+		return listVo;
 	}
 	
 	@PostMapping(produces = {"application/json", "application/xml", "application/x-yaml"},
 				consumes = {"application/json", "application/xml", "application/x-yaml"})
 	public PersonVO createv1(@RequestBody PersonVO person) throws Exception {
-		return service.createv1(person);
+		PersonVO vo = service.createv1(person);
+		vo.add(WebMvcLinkBuilder.linkTo(PersonController.class).slash(vo.getId()).withSelfRel());
+		return vo;
 	}
 	
 	@PutMapping(produces = {"application/json", "application/xml", "application/x-yaml"},
 				consumes = {"application/json", "application/xml", "application/x-yaml"})
 	public PersonVO update(@RequestBody PersonVO person) throws Exception {
-		return service.update(person);
+		PersonVO vo = service.update(person);
+		vo.add(WebMvcLinkBuilder.linkTo(PersonController.class).slash(vo.getId()).withSelfRel());
+		return vo;
 	}
 	
 	@DeleteMapping("/{id}")
