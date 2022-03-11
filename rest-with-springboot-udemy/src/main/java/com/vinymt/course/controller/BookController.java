@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vinymt.course.data.vo.v1.BookVO;
 import com.vinymt.course.services.BookService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@Api(tags="Book controller")
 @RestController
 @RequestMapping("/api/book/v1")
 public class BookController {
@@ -24,6 +28,7 @@ public class BookController {
 	@Autowired
 	private BookService service;
 	
+	@ApiOperation(value="Find by id")
 	@GetMapping(value = "/{id}", produces = {"application/json", "application/xml", "application/x-yaml"})
 	public BookVO findById(@PathVariable("id") Long id) throws Exception {
 		BookVO vo = service.findById(id);
@@ -31,6 +36,7 @@ public class BookController {
 		return vo;
 	}
 	
+	@ApiOperation(value="Find all")
 	@GetMapping(produces = {"application/json", "application/xml", "application/x-yaml"})
 	public List<BookVO> findAll() throws Exception {
 		List<BookVO> listVo = service.findAll();
@@ -42,6 +48,7 @@ public class BookController {
 		return listVo;
 	}
 	
+	@ApiOperation(value="Create")
 	@PostMapping(produces = {"application/json", "application/xml", "application/x-yaml"},
 				consumes = {"application/json", "application/xml", "application/x-yaml"})
 	public BookVO createv1(@RequestBody BookVO person) throws Exception {
@@ -50,6 +57,7 @@ public class BookController {
 		return vo;
 	}
 	
+	@ApiOperation(value="Update")
 	@PutMapping(produces = {"application/json", "application/xml", "application/x-yaml"},
 				consumes = {"application/json", "application/xml", "application/x-yaml"})
 	public BookVO update(@RequestBody BookVO person) throws Exception {
@@ -58,6 +66,7 @@ public class BookController {
 		return vo;
 	}
 	
+	@ApiOperation(value="Delete")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) throws Exception {
 		service.delete(id);
