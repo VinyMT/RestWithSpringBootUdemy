@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vinymt.course.data.vo.v1.PersonVO;
 import com.vinymt.course.services.PersonService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@Api(tags="Person controller")
 @RestController
 @RequestMapping("/api/person/v1")
 public class PersonController {
@@ -24,6 +28,7 @@ public class PersonController {
 	@Autowired
 	private PersonService service;
 	
+	@ApiOperation(value="Find by id")
 	@GetMapping(value = "/{id}", produces = {"application/json", "application/xml", "application/x-yaml"})
 	public PersonVO findById(@PathVariable("id") Long id) throws Exception {
 		PersonVO vo = service.findById(id);
@@ -31,6 +36,7 @@ public class PersonController {
 		return vo;
 	}
 	
+	@ApiOperation(value="Find all")
 	@GetMapping(produces = {"application/json", "application/xml", "application/x-yaml"})
 	public List<PersonVO> findAll() throws Exception {
 		List<PersonVO> listVo = service.findAll();
@@ -42,6 +48,7 @@ public class PersonController {
 		return listVo;
 	}
 	
+	@ApiOperation(value="Create")
 	@PostMapping(produces = {"application/json", "application/xml", "application/x-yaml"},
 				consumes = {"application/json", "application/xml", "application/x-yaml"})
 	public PersonVO createv1(@RequestBody PersonVO person) throws Exception {
@@ -50,6 +57,7 @@ public class PersonController {
 		return vo;
 	}
 	
+	@ApiOperation(value="Update")
 	@PutMapping(produces = {"application/json", "application/xml", "application/x-yaml"},
 				consumes = {"application/json", "application/xml", "application/x-yaml"})
 	public PersonVO update(@RequestBody PersonVO person) throws Exception {
@@ -58,6 +66,7 @@ public class PersonController {
 		return vo;
 	}
 	
+	@ApiOperation(value="Delete")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) throws Exception {
 		service.delete(id);
