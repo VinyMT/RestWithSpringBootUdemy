@@ -22,7 +22,7 @@ public class UserService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		var user = repo.findByUsername(username);
 		if(user != null) {
-			return null;
+			return user;
 		} else {
 			throw new UsernameNotFoundException("Username " + username + " not found");
 		}
