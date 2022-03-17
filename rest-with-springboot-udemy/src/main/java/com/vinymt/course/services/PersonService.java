@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.vinymt.course.converter.DozerConverter;
 import com.vinymt.course.converter.custom.PersonConverter;
 import com.vinymt.course.data.model.Person;
@@ -59,5 +61,15 @@ public class PersonService {
 		Person entity = repo.findById(id).orElseThrow(
 				() -> new ResourceNotFoundException("No records found for this id!"));
 		repo.delete(entity);
+	}
+	
+	@Transactional
+	public PersonVO disablePerson(Long id) {
+		repo.diablePerson(id);
+		
+		Person entity = repo.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException("No records found for this id!"));
+		
+		return DozerConverter.parseObject(entity, PersonVO.class);
 	}
 }
