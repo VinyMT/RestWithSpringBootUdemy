@@ -3,6 +3,7 @@ package com.vinymt.course.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +31,10 @@ public class PersonService {
 		return DozerConverter.parseObject(entity, PersonVO.class);
 	}
 	
-	public List<PersonVO> findAll() {
-		return DozerConverter.parseListObjects(repo.findAll(), PersonVO.class);
+	public List<PersonVO> findAll(Pageable pageable) {
+		var entities = repo.findAll(pageable).getContent();
+		
+		return DozerConverter.parseListObjects(entities, PersonVO.class);
 	}
 	
 	public PersonVO createv1(PersonVO person) {
