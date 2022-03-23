@@ -1,13 +1,17 @@
 package com.vinymt.course.controller;
 
+import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,21 +48,22 @@ public class PersonController {
 	
 	@ApiOperation(value="Find all")
 	@GetMapping(produces = {"application/json", "application/xml", "application/x-yaml"})
-	public List<PersonVO> findAll(
+	public ResponseEntity<PagedModel<PersonVO>> findAll(
 			@RequestParam(value="page", defaultValue = "0") int page,
 			@RequestParam(value="limit", defaultValue = "12") int limit,
-			@RequestParam(value="direction", defaultValue = "asc") String direction) throws Exception {
+			@RequestParam(value="direction", defaultValue = "asc") String direction,
+			PagedResourcesAssembler assembler) throws Exception {
 		var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
 		
 		Pageable pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "firstName"));
 		
-		List<PersonVO> listVo = service.findAll(pageable);
+		Page<PersonVO> persons = service.findAll(pageable);
 		
-		for(PersonVO vo : listVo) {
+		for(PersonVO vo : persons) {
 			vo.add(WebMvcLinkBuilder.linkTo(PersonController.class).slash(vo.getId()).withSelfRel());
 		}
 		
-		return listVo;
+		return new ResponseEntity<>(assembler.toModel(persons), HttpStatus.OK);
 	}
 	
 	@ApiOperation(value="Create")
