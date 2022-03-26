@@ -1,8 +1,9 @@
 package com.vinymt.course.services;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.vinymt.course.converter.DozerConverter;
@@ -23,8 +24,14 @@ public class BookService {
 		return DozerConverter.parseObject(entity, BookVO.class);
 	}
 	
-	public List<BookVO> findAll() {
-		return DozerConverter.parseListObjects(repo.findAll(), BookVO.class);
+	public Page<BookVO> findAll(Pageable pageable) {
+		var page = repo.findAll(pageable);
+		
+		return page.map(this::convertToBookVO);
+	}
+	
+	private BookVO convertToBookVO(Book entity) {
+		return DozerConverter.parseObject(entity, BookVO.class);
 	}
 	
 	public BookVO create(BookVO book) {
