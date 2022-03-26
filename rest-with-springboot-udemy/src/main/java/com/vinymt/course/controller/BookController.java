@@ -35,6 +35,10 @@ public class BookController {
 	@Autowired
 	private BookService service;
 	
+	@Autowired
+	PagedResourcesAssembler<BookVO> assembler;
+	
+	
 	@ApiOperation(value="Find by id")
 	@GetMapping(value = "/{id}", produces = {"application/json", "application/xml", "application/x-yaml"})
 	public BookVO findById(@PathVariable("id") Long id) throws Exception {
@@ -45,10 +49,9 @@ public class BookController {
 	
 	@ApiOperation(value="Find all")
 	@GetMapping(produces = {"application/json", "application/xml", "application/x-yaml"})
-	public ResponseEntity<PagedModel<BookVO>> findAll(@RequestParam(value="page", defaultValue = "0") int page,
+	public ResponseEntity<?> findAll(@RequestParam(value="page", defaultValue = "0") int page,
 			@RequestParam(value="limit", defaultValue = "12") int limit,
-			@RequestParam(value="direction", defaultValue = "asc") String direction,
-			PagedResourcesAssembler assembler) throws Exception {
+			@RequestParam(value="direction", defaultValue = "asc") String direction) throws Exception {
 		var sortDirection = direction.equalsIgnoreCase("desc") ? Direction.DESC : Direction.ASC;
 		
 		Pageable pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "title"));
@@ -59,7 +62,9 @@ public class BookController {
 			vo.add(WebMvcLinkBuilder.linkTo(BookController.class).slash(vo.getId()).withSelfRel());
 		}
 		
-		return new ResponseEntity<>(assembler.toModel(books), HttpStatus.OK);
+		PagedModel<?> model = assembler.toModel(books);
+		
+		return new ResponseEntity<>(model, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value="Create")
