@@ -37,6 +37,9 @@ public class PersonController {
 	@Autowired
 	private PersonService service;
 	
+	@Autowired
+	private PagedResourcesAssembler<PersonVO> assembler;
+	
 	@ApiOperation(value="Find by id")
 	@GetMapping(value = "/{id}", produces = {"application/json", "application/xml", "application/x-yaml"})
 	public PersonVO findById(@PathVariable("id") Long id) throws Exception {
@@ -47,11 +50,10 @@ public class PersonController {
 	
 	@ApiOperation(value="Find all")
 	@GetMapping(produces = {"application/json", "application/xml", "application/x-yaml"})
-	public ResponseEntity<PagedModel<PersonVO>> findAll(
+	public ResponseEntity<?> findAll(
 			@RequestParam(value="page", defaultValue = "0") int page,
 			@RequestParam(value="limit", defaultValue = "12") int limit,
-			@RequestParam(value="direction", defaultValue = "asc") String direction,
-			PagedResourcesAssembler assembler) throws Exception {
+			@RequestParam(value="direction", defaultValue = "asc") String direction) throws Exception {
 		var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
 		
 		Pageable pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "firstName"));
@@ -62,7 +64,31 @@ public class PersonController {
 			vo.add(WebMvcLinkBuilder.linkTo(PersonController.class).slash(vo.getId()).withSelfRel());
 		}
 		
-		return new ResponseEntity<>(assembler.toModel(persons), HttpStatus.OK);
+		PagedModel<?> model = assembler.toModel(persons);
+		
+		return new ResponseEntity<>(model, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value="Find person by name")
+	@GetMapping(value="/findPersonByName/{firstName}", produces = {"application/json", "application/xml", "application/x-yaml"})
+	public ResponseEntity<?> findPersonByName(
+			@PathVariable("firstName") String firstName,
+			@RequestParam(value="page", defaultValue = "0") int page,
+			@RequestParam(value="limit", defaultValue = "12") int limit,
+			@RequestParam(value="direction", defaultValue = "asc") String direction) throws Exception {
+		var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
+		
+		Pageable pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "firstName"));
+		
+		Page<PersonVO> persons = service.findPersonByName(firstName, pageable);
+		
+		for(PersonVO vo : persons) {
+			vo.add(WebMvcLinkBuilder.linkTo(PersonController.class).slash(vo.getId()).withSelfRel());
+		}
+		
+		PagedModel<?> model = assembler.toModel(persons);
+		
+		return new ResponseEntity<>(model, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value="Create")
